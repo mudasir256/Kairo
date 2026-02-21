@@ -6,6 +6,7 @@ const K = "/kairo";
 
 export const assets = {
   logo: `${K}/logokairo.png`,
+  ceo: `${K}/CEO.jpg`,
   // Hero & marketing
   hero: `${K}/image.webp`,
   heroAlt: `${K}/9_IMG_5540-1.jpeg`,

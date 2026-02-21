@@ -131,7 +131,7 @@ export function CartDrawer() {
               <span>{formatPrice(total)}</span>
             </div>
             <Link
-              href="/cart"
+              href="/checkout"
               onClick={closeCart}
               className="block w-full py-3 text-center font-medium bg-[var(--foreground)] text-[var(--cream)] rounded-lg hover:opacity-90 transition"
             >

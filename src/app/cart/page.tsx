@@ -116,12 +116,12 @@ export default function CartPage() {
                 Shipping and taxes calculated at checkout.
               </p>
             </div>
-            <button
-              type="button"
-              className="w-full mt-6 py-4 bg-[var(--foreground)] text-[var(--cream)] font-medium rounded-lg hover:opacity-90 transition"
+            <Link
+              href="/checkout"
+              className="block w-full mt-6 py-4 bg-[var(--foreground)] text-[var(--cream)] font-medium rounded-lg hover:opacity-90 transition text-center"
             >
               Check out
-            </button>
+            </Link>
             <Link
               href="/"
               className="block mt-4 text-center text-sm text-[var(--accent)] hover:underline"
