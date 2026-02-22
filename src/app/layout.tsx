@@ -38,11 +38,13 @@ export default function RootLayout({
     <html lang="en" className={`${dmSans.variable} ${cormorant.variable}`} suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col" suppressHydrationWarning>
         <CartProvider>
-          <Header />
-          <main className="flex-1 pb-14 md:pb-0">{children}</main>
-          <Footer />
-          <BottomTab />
-          <CartDrawer />
+          <div className="contents" suppressHydrationWarning>
+            <Header />
+            <main className="flex-1 pb-14 md:pb-0">{children}</main>
+            <Footer />
+            <BottomTab />
+            <CartDrawer />
+          </div>
         </CartProvider>
       </body>
     </html>

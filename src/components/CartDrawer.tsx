@@ -27,10 +27,10 @@ export function CartDrawer() {
         aria-hidden
       />
       <div
-        className={`fixed right-0 top-0 bottom-0 w-full max-w-md bg-[var(--card)] shadow-xl z-50 flex flex-col transition-transform duration-300 ease-out ${isOpen ? "translate-x-0" : "translate-x-full pointer-events-none"}`}
+        className={`fixed right-0 top-0 bottom-0 w-full max-w-md max-h-[100dvh] sm:max-h-none bg-[var(--card)] shadow-xl z-50 flex flex-col transition-transform duration-300 ease-out ${isOpen ? "translate-x-0" : "translate-x-full pointer-events-none"}`}
         aria-hidden={!isOpen}
       >
-        <div className="flex items-center justify-between p-4 border-b border-[var(--border)]">
+        <div className="flex items-center justify-between p-4 border-b border-[var(--border)] shrink-0 pt-[env(safe-area-inset-top)]">
           <h2 className="font-serif text-xl font-semibold">Your Cart</h2>
           <button
             type="button"
@@ -53,7 +53,7 @@ export function CartDrawer() {
             </svg>
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 overscroll-contain">
           {items.length === 0 ? (
             <p className="text-[var(--muted)] text-center py-12">
               Your cart is empty.
@@ -125,7 +125,7 @@ export function CartDrawer() {
           )}
         </div>
         {items.length > 0 && (
-          <div className="p-4 border-t border-[var(--border)] bg-[var(--cream)]">
+          <div className="p-4 pt-4 pb-[env(safe-area-inset-bottom)] border-t border-[var(--border)] bg-[var(--cream)] shrink-0">
             <div className="flex justify-between text-lg font-semibold mb-4">
               <span>Subtotal</span>
               <span>{formatPrice(total)}</span>

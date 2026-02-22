@@ -11,6 +11,8 @@ export function Header() {
   const { itemCount, openCart } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openNavId, setOpenNavId] = useState<string | null>(null);
+  const [openMobileSubId, setOpenMobileSubId] = useState<string | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-40 bg-[var(--background)]/95 backdrop-blur border-b border-[var(--border)]">
@@ -153,60 +155,137 @@ export function Header() {
               )}
             </button>
           </div>
-          {/* Spacer on mobile so logo stays centered when right icons are hidden */}
-          <div className="w-10 md:hidden" aria-hidden />
+          {/* Mobile: profile icon with dropdown (Login / Logout) */}
+          <div className="relative md:hidden">
+            <button
+              type="button"
+              onClick={() => setProfileOpen((o) => !o)}
+              className="p-2 rounded-full hover:bg-[var(--cream)] transition-colors duration-200"
+              aria-label="Account"
+              aria-expanded={profileOpen}
+              aria-haspopup="true"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </button>
+            {profileOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  aria-hidden
+                  onClick={() => setProfileOpen(false)}
+                />
+                <div className="absolute right-0 top-full mt-1 z-50 w-48 py-1 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow-lg animate-scale-in">
+                  <Link
+                    href="/login"
+                    className="block px-4 py-2.5 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--cream)] hover:text-[var(--accent)]"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="block px-4 py-2.5 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--cream)] hover:text-[var(--accent)]"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    Sign up
+                  </Link>
+                  <Link
+                    href="/"
+                    className="block px-4 py-2.5 text-sm text-[var(--muted)] hover:bg-[var(--cream)] border-t border-[var(--border)]"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    Logout
+                  </Link>
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile menu overlay - fixed so page does not move */}
         {menuOpen && (
-          <div className="md:hidden border-t border-[var(--border)] bg-[var(--card)] animate-fade-down">
-            <nav className="py-4 px-4 space-y-1">
-              {navCategories.map((cat) => (
-                <div key={cat.id}>
-                  <Link
-                    href={`/${cat.slug}`}
-                    className="block py-2 font-medium"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {cat.name}
-                  </Link>
-                  <div className="pl-4 space-y-1">
-                    {cat.children.slice(0, 5).map((child) => (
+          <>
+            <div
+              className="fixed inset-0 top-16 left-0 right-0 bottom-0 bg-black/40 z-40 md:hidden"
+              aria-hidden
+              onClick={() => setMenuOpen(false)}
+            />
+            <div className="fixed top-16 left-0 right-0 z-50 md:hidden max-h-[70vh] overflow-y-auto bg-[var(--card)] border-b border-[var(--border)] shadow-lg animate-fade-down">
+              <nav className="py-4 px-4 space-y-1">
+              {navCategories.map((cat) => {
+                const isSubOpen = openMobileSubId === cat.id;
+                const hasChildren = cat.children.length > 0;
+                return (
+                  <div key={cat.id}>
+                    {hasChildren ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setOpenMobileSubId((id) => (id === cat.id ? null : cat.id))}
+                          className="flex items-center justify-between w-full py-2 font-medium text-left"
+                          aria-expanded={isSubOpen}
+                          aria-controls={`mobile-sub-${cat.id}`}
+                          id={`mobile-cat-${cat.id}`}
+                        >
+                          {cat.name}
+                          <svg
+                            className={`w-5 h-5 text-[var(--muted)] transition-transform ${isSubOpen ? "rotate-180" : ""}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                        <div
+                          id={`mobile-sub-${cat.id}`}
+                          role="region"
+                          aria-labelledby={`mobile-cat-${cat.id}`}
+                          className={`grid transition-[grid-template-rows] duration-200 ease-out ${isSubOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+                        >
+                          <div className="overflow-hidden">
+                            <div className="pl-4 space-y-1 pt-1 pb-2">
+                              {cat.children.map((child) => (
+                                <Link
+                                  key={child.slug}
+                                  href={`/${child.slug}`}
+                                  className="block py-1.5 text-sm text-[var(--muted)] hover:text-[var(--accent)]"
+                                  onClick={() => setMenuOpen(false)}
+                                >
+                                  {child.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
                       <Link
-                        key={child.slug}
-                        href={`/${child.slug}`}
-                        className="block py-1.5 text-sm text-[var(--muted)]"
+                        href={`/${cat.slug}`}
+                        className="block py-2 font-medium"
                         onClick={() => setMenuOpen(false)}
                       >
-                        {child.name}
+                        {cat.name}
                       </Link>
-                    ))}
+                    )}
                   </div>
-                </div>
-              ))}
-              <Link
-                href="/login"
-                className="block py-2 font-medium"
-                onClick={() => setMenuOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="block py-2 font-medium"
-                onClick={() => setMenuOpen(false)}
-              >
-                Sign up
-              </Link>
-              <Link
-                href="/cart"
-                className="block py-2 font-medium border-t border-[var(--border)] mt-4 pt-4"
-                onClick={() => setMenuOpen(false)}
-              >
-                Cart {itemCount > 0 && `(${itemCount})`}
-              </Link>
-            </nav>
-          </div>
+                );
+              })}
+              </nav>
+            </div>
+          </>
         )}
       </div>
     </header>
